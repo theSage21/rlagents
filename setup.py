@@ -10,6 +10,7 @@ setup(name='rlagents',
       author_email='arjoonn.94@gmail.com',
       license='MIT',
       packages=['rlagents'],
+      install_requires=['tqdm'],
       entry_points={'console_scripts': ['rlagents=rlagents.cli:main']},
       keywords=['rlagents', 'reinforcement', 'learning'],
       zip_safe=False)

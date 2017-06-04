@@ -13,5 +13,6 @@ Installation
 Todo
 ----
 
+- [x] RandomAgent
 - [ ] MonteCarlo
 - [ ] Q-Learning
