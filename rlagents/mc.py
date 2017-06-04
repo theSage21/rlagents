@@ -29,7 +29,7 @@ class MCAgent:
         if observation not in self.means:
             self.means[observation] = {a: 0 for a in self.actions}
             self.totals[observation] = {a: 0 for a in self.actions}
-            self.counts[observation] = {a: 0 for a in self.actions}
+            self.counts[observation] = {a: 1 for a in self.actions}
         if random.random() <= self.ep:
             vals = [(v, a) for a, v in self.means[observation].items()]
             vals.sort(key=lambda x: x[0])
