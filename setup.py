@@ -11,6 +11,5 @@ setup(name='rlagents',
       license='MIT',
       packages=['rlagents'],
       install_requires=['tqdm', 'ujson', 'gym'],
-      entry_points={'console_scripts': ['rlagents=rlagents.cli:main']},
       keywords=['rlagents', 'reinforcement', 'learning'],
       zip_safe=False)
