@@ -1,5 +1,5 @@
 import random
-__version__ = (0, 0, 6)
+__version__ = (0, 0, 7)
 from .tools import benchmark, gymwrapper
 from .mc import MCAgent
 

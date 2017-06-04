@@ -31,7 +31,7 @@ class MCAgent:
             self.totals[observation] = {a: 0 for a in self.actions}
             self.counts[observation] = {a: 0 for a in self.actions}
         if random.random() <= self.ep:
-            vals = [(v, a) for a, v in self.means[observation]]
+            vals = [(v, a) for a, v in self.means[observation].items()]
             vals.sort(key=lambda x: x[0])
             act = vals[-1][1]
         else:
