@@ -2,6 +2,7 @@ from multiprocessing import Pool
 from tqdm import tqdm
 import random
 import ujson
+import types
 import os
 
 
@@ -56,3 +57,11 @@ def benchmark(agent_list, env_list, n_episodes,
     else:
         print('Experiments completed...')
     return paths
+
+
+def gymwrapper(env):
+    "Return an env which can copy()"
+    def envcloner(self):
+        return gym.make(self.spec.id)
+    env.copy = types.MethodType(envcloner, env)
+    return env

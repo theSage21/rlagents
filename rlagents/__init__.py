@@ -1,5 +1,7 @@
 import random
-__version__ = (0, 0, 2)
+__version__ = (0, 0, 5)
+from .tools import benchmark, gymwrapper
+__all__ = ['benchmark', '__version__', 'RandomAgent', 'gymwrapper']
 
 
 class RandomAgent:
