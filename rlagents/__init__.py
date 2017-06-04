@@ -1,7 +1,11 @@
 import random
-__version__ = (0, 0, 5)
+__version__ = (0, 0, 6)
 from .tools import benchmark, gymwrapper
-__all__ = ['benchmark', '__version__', 'RandomAgent', 'gymwrapper']
+from .mc import MCAgent
+
+__all__ = ['benchmark', '__version__', 'RandomAgent', 'gymwrapper',
+           'MCAgent'
+           ]
 
 
 class RandomAgent:
