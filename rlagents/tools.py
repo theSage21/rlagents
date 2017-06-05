@@ -47,6 +47,8 @@ def benchmark(agent_list, env_list, n_episodes,
     else:
         print('{} Exists'.format(base_reporting_path))
 
+    if max_steps_per_episode is None:
+        max_steps_per_episode = int(1e10)
     print('Building Dispatch list...')
     arguments = [(agent.copy(), env.copy(), n_episodes, max_steps_per_episode,
                   trial_index, record_everything)
