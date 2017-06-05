@@ -15,4 +15,4 @@ Todo
 
 - [x] RandomAgent
 - [x] MonteCarlo
-- [ ] Q-Learning
+- [x] Q-Learning
