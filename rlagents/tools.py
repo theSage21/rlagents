@@ -11,7 +11,7 @@ base_reporting_path = 'DataDir'
 
 
 def record_everything(*args):
-    return args
+    return [str(i) for i in args]
 
 
 def run_n_episodes(args):
