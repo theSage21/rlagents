@@ -1,10 +1,11 @@
 import random
-__version__ = (0, 0, 8)
 from .tools import benchmark, gymwrapper
 from .mc import MCAgent
+from .ql import QLAgent
 
+__version__ = (0, 0, 10)
 __all__ = ['benchmark', '__version__', 'RandomAgent', 'gymwrapper',
-           'MCAgent'
+           'MCAgent', 'QLAgent'
            ]
 
 

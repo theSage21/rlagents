@@ -22,6 +22,7 @@ def run_n_episodes(args):
     for episode in range(n_episodes):
         obs = env.reset()
         totalrew = 0
+        agent.start_episode()
         for step in range(max_steps):
             act = agent.get_action(obs)
             obs, rew, done, info = env.step(act)
@@ -29,6 +30,7 @@ def run_n_episodes(args):
             totalrew += rew
             if done:
                 break
+        agent.end_episode()
         data.append(episode_callback(runid, agent, env, episode,
                                      totalrew, trial_number))
     path = os.path.join(base_reporting_path, runid)
@@ -39,6 +41,12 @@ def run_n_episodes(args):
 
 def benchmark(agent_list, env_list, n_episodes,
               max_steps_per_episode, n_trials):
+    if not os.path.exists(base_reporting_path):
+        print('{} does not exist. Creating...'.format(base_reporting_path))
+        os.mkdir(base_reporting_path)
+    else:
+        print('{} Exists'.format(base_reporting_path))
+
     print('Building Dispatch list...')
     arguments = [(agent.copy(), env.copy(), n_episodes, max_steps_per_episode,
                   trial_index, record_everything)
@@ -62,6 +70,7 @@ def benchmark(agent_list, env_list, n_episodes,
 def gymwrapper(env):
     "Return an env which can copy()"
     def envcloner(self):
+        import gym
         return gym.make(self.spec.id)
     env.copy = types.MethodType(envcloner, env)
     return env
