@@ -21,7 +21,7 @@ def run_n_episodes(args):
     data = []
     measure_episode = False
     agent_ep = agent.ep
-    for episode in range(n_episodes):
+    for episode in range(n_episodes*2):  # Because we train and test together
         agent.ep = 1 if measure_episode else agent_ep
         obs = env.reset()
         totalrew = 0
