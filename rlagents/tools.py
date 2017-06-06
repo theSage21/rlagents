@@ -20,8 +20,9 @@ def run_n_episodes(args):
     agent.reset()
     data = []
     measure_episode = False
-    agent_ep = agent.ep
+    agent_ep = float(agent.ep)
     for episode in range(n_episodes*2):  # Because we train and test together
+        episode //= 2  # Count every other episode
         agent.ep = 1 if measure_episode else agent_ep
         obs = env.reset()
         totalrew = 0
@@ -41,6 +42,7 @@ def run_n_episodes(args):
     path = os.path.join(base_reporting_path, runid)
     with open(path, 'w') as fl:
         ujson.dump(data, fl)
+    agent.ep = agent_ep
     return path
 
 
