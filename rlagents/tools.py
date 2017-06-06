@@ -1,7 +1,5 @@
 from multiprocessing import Pool
-from tqdm import tqdm
 import random
-import ujson
 import types
 import os
 
@@ -34,13 +32,20 @@ def run_n_episodes(args):
         data.append(episode_callback(runid, agent, env, episode,
                                      totalrew, trial_number))
     path = os.path.join(base_reporting_path, runid)
+
+    try:
+        import ujson as json
+    except:
+        import json
     with open(path, 'w') as fl:
-        ujson.dump(data, fl)
+        json.dump(data, fl)
     return path
 
 
 def benchmark(agent_list, env_list, n_episodes,
               max_steps_per_episode, n_trials):
+
+    from tqdm import tqdm
     if not os.path.exists(base_reporting_path):
         print('{} does not exist. Creating...'.format(base_reporting_path))
         os.mkdir(base_reporting_path)
