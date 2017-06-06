@@ -17,7 +17,11 @@ def run_n_episodes(args):
     runid = str(random.getrandbits(runid_size))
     agent.reset()
     data = []
-    for episode in range(n_episodes):
+    measure_episode = False
+    agent_ep = float(agent.ep)
+    for episode in range(n_episodes*2):  # Because we train and test together
+        episode //= 2  # Count every other episode
+        agent.ep = 1 if measure_episode else agent_ep
         obs = env.reset()
         totalrew = 0
         agent.start_episode()
@@ -29,9 +33,13 @@ def run_n_episodes(args):
             if done:
                 break
         agent.end_episode()
-        data.append(episode_callback(runid, agent, env, episode,
-                                     totalrew, trial_number))
+        if measure_episode:
+            data.append(episode_callback(runid, agent, env, episode,
+                                         totalrew, trial_number))
+        measure_episode = not measure_episode
     path = os.path.join(base_reporting_path, runid)
+    # Restore original ep
+    agent.ep = agent_ep
 
     try:
         import ujson as json

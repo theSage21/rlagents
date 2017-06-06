@@ -2,6 +2,9 @@ import random
 
 
 class MCAgent:
+    def __str__(self):
+        return 'Monte Carlo Agent'
+
     def __init__(self, actions, ep=0.95):
         self.actions = actions
         self.ep = ep

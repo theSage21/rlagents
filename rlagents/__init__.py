@@ -3,7 +3,7 @@ from .tools import benchmark, gymwrapper
 from .mc import MCAgent
 from .ql import QLAgent
 
-__version__ = (0, 0, 12)
+__version__ = (0, 0, 14)
 __all__ = ['benchmark', '__version__', 'RandomAgent', 'gymwrapper',
            'MCAgent', 'QLAgent'
            ]
