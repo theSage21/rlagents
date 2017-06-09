@@ -13,15 +13,15 @@ def record_everything(*args):
 
 
 def run_n_episodes(args):
-    agent, env, n_episodes, max_steps, trial_number, episode_callback = args
+    (agent, env, n_episodes, max_steps,
+     trial_number, episode_callback, train_steps) = args
     runid = str(random.getrandbits(runid_size))
     agent.reset()
     data = []
-    measure_episode = False
     agent_ep = float(agent.ep)
-    for episode in range(n_episodes*2):  # Because we train and test together
-        episode //= 2  # Count every other episode
-        agent.ep = 1 if measure_episode else agent_ep
+    for episode in range(n_episodes*train_steps):  # train and test together
+        if episode % train_steps == 0:
+            agent.ep = 1
         obs = env.reset()
         totalrew = 0
         agent.start_episode()
@@ -35,10 +35,11 @@ def run_n_episodes(args):
             if done:
                 break
         agent.end_episode()
-        if measure_episode:
+        if episode % train_steps == 0:
+            episode //= train_steps  # Count every other episode
             data.append(episode_callback(runid, agent, env, episode,
                                          totalrew, trial_number))
-        measure_episode = not measure_episode
+            agent.ep = agent_ep
     path = os.path.join(base_reporting_path, runid)
     # Restore original ep
     agent.ep = agent_ep
@@ -53,8 +54,7 @@ def run_n_episodes(args):
 
 
 def benchmark(agent_list, env_list, n_episodes,
-              max_steps_per_episode, n_trials):
-
+              max_steps_per_episode, n_trials, train_steps=5):
     from tqdm import tqdm
     if not os.path.exists(base_reporting_path):
         print('{} does not exist. Creating...'.format(base_reporting_path))
@@ -66,7 +66,7 @@ def benchmark(agent_list, env_list, n_episodes,
         max_steps_per_episode = int(1e10)
     print('Building Dispatch list...')
     arguments = [(agent.copy(), env.copy(), n_episodes, max_steps_per_episode,
-                  trial_index, record_everything)
+                  trial_index, record_everything, train_steps)
                  for agent in agent_list
                  for env in env_list
                  for trial_index in range(n_trials)]
