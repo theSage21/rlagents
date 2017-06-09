@@ -54,7 +54,7 @@ def run_n_episodes(args):
 
 
 def benchmark(agent_list, env_list, n_episodes,
-              max_steps_per_episode, n_trials, train_steps=5):
+              max_steps_per_episode, n_trials, train_steps=2):
     from tqdm import tqdm
     if not os.path.exists(base_reporting_path):
         print('{} does not exist. Creating...'.format(base_reporting_path))
