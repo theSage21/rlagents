@@ -29,6 +29,8 @@ def run_n_episodes(args):
             act = agent.get_action(obs)
             obs, rew, done, info = env.step(act)
             agent.observe_reward(rew)
+            if not isinstance(rew, (float, int)):
+                rew = sum(rew)
             totalrew += rew
             if done:
                 break
