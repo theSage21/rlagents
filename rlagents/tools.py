@@ -36,7 +36,6 @@ def run_n_episodes(args):
                 break
         agent.end_episode()
         if episode % train_steps == 0:
-            episode //= train_steps  # Count every other episode
             data.append(episode_callback(runid, agent, env, episode,
                                          totalrew, trial_number))
             agent.ep = agent_ep
