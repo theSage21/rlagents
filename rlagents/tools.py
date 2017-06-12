@@ -62,7 +62,7 @@ def benchmark(agent_list, env_list, n_episodes,
         already_done = 0
     else:
         print('{} Exists'.format(base_reporting_path))
-        already_done = len(os.path.listdir(base_reporting_path))
+        already_done = len(os.listdir(base_reporting_path))
     if max_steps_per_episode is None:
         max_steps_per_episode = hard_step_limit
     print('Building Dispatch list...')
