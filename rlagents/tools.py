@@ -6,6 +6,7 @@ import os
 
 runid_size = 200
 base_reporting_path = 'DataDir'
+hard_step_limit = int(1e10)
 
 
 def record_everything(*args):
@@ -58,17 +59,19 @@ def benchmark(agent_list, env_list, n_episodes,
     if not os.path.exists(base_reporting_path):
         print('{} does not exist. Creating...'.format(base_reporting_path))
         os.mkdir(base_reporting_path)
+        already_done = 0
     else:
         print('{} Exists'.format(base_reporting_path))
-
+        already_done = len(os.path.listdir(base_reporting_path))
     if max_steps_per_episode is None:
-        max_steps_per_episode = int(1e10)
+        max_steps_per_episode = hard_step_limit
     print('Building Dispatch list...')
     arguments = [(agent.copy(), env.copy(), n_episodes, max_steps_per_episode,
-                  trial_index, record_everything, train_steps)
+                  trial_index+already_done, record_everything, train_steps)
                  for agent in agent_list
                  for env in env_list
                  for trial_index in range(n_trials)]
+    random.shuffle(arguments)  # Sample everything at any time
     print('Running experiments...')
     paths = []
     try:
