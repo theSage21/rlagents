@@ -2,6 +2,10 @@ from multiprocessing import Pool
 import random
 import types
 import os
+try:
+    import ujson as json
+except:
+    import json
 
 
 runid_size = 200
@@ -20,7 +24,7 @@ def run_n_episodes(args):
     agent.reset()
     data = []
     agent_ep = float(agent.ep)
-    for episode in range(n_episodes*train_steps):  # train and test together
+    for episode in range(n_episodes):
         if episode % train_steps == 0:
             agent.ep = 1
         obs = env.reset()
@@ -41,13 +45,9 @@ def run_n_episodes(args):
                                          totalrew, trial_number))
             agent.ep = agent_ep
     path = os.path.join(base_reporting_path, runid)
-    # Restore original ep
+    # Make sure to restore original ep
     agent.ep = agent_ep
 
-    try:
-        import ujson as json
-    except:
-        import json
     with open(path, 'w') as fl:
         json.dump(data, fl)
     return path
@@ -61,7 +61,8 @@ def benchmark(agent_list, env_list, n_episodes,
         os.mkdir(base_reporting_path)
         already_done = 0
     else:
-        print('{} Exists'.format(base_reporting_path))
+        message = '{} Exists. Continuing experiment...'
+        print(message.format(base_reporting_path))
         already_done = len(os.listdir(base_reporting_path))
     if max_steps_per_episode is None:
         max_steps_per_episode = hard_step_limit
@@ -71,7 +72,8 @@ def benchmark(agent_list, env_list, n_episodes,
                  for agent in agent_list
                  for env in env_list
                  for trial_index in range(n_trials)]
-    random.shuffle(arguments)  # Sample everything at any time
+    # Stoping at any time should not give you data biased to some agent-world
+    random.shuffle(arguments)
     print('Running experiments...')
     paths = []
     try:
