@@ -1,11 +1,11 @@
 import random
-from .tools import benchmark, gymwrapper
+from .tools import benchmark, gymwrapper, make_df
 from .mc import MCAgent
 from .ql import QLAgent
 
-__version__ = (0, 0, 21)
+__version__ = (0, 0, 22)
 __all__ = ['benchmark', '__version__', 'RandomAgent', 'gymwrapper',
-           'MCAgent', 'QLAgent'
+           'MCAgent', 'QLAgent', 'make_df'
            ]
 
 

@@ -95,3 +95,38 @@ def gymwrapper(env):
         return gym.make(self.spec.id)
     env.copy = types.MethodType(envcloner, env)
     return env
+
+
+def parse(d):
+    return (None,
+            'Q-Learning' if 'Q' in d[1] else 'Generalized Learning',
+            None,
+            int(d[3]),
+            float(d[4]),
+            int(d[5]))
+
+
+def readfile(path):
+    with open(path, 'r') as fl:
+        da = json.load(fl)
+        x = list(map(parse, da))
+    return x
+
+
+def make_df(paths):
+    from tqdm import tqdm
+    import pandas as pd
+    print('{} files'.format(len(paths)))
+    print('Reading files...')
+    root = base_reporting_path
+    with Pool() as pool:
+        filepaths = [os.path.join(root, i) for i in paths]
+        work = pool.imap_unordered(readfile, filepaths)
+        data = []
+        for d in tqdm(work, total=len(filepaths), ncols=80, leave=False):
+            data.extend(d)
+    print('Painting...')
+    data = pd.DataFrame(data, columns=['runid', 'agent',
+                                       'world', 'ep',
+                                       'rew', 'trial'])
+    return data
