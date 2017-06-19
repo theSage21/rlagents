@@ -118,9 +118,8 @@ def make_df(paths):
     import pandas as pd
     print('{} files'.format(len(paths)))
     print('Reading files...')
-    root = base_reporting_path
     with Pool() as pool:
-        filepaths = [os.path.join(root, i) for i in paths]
+        filepaths = paths
         work = pool.imap_unordered(readfile, filepaths)
         data = []
         for d in tqdm(work, total=len(filepaths), ncols=80, leave=False):
