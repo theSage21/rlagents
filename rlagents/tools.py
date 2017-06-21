@@ -18,39 +18,42 @@ def record_everything(*args):
 
 
 def run_n_episodes(args):
-    (agent, env, n_episodes, max_steps,
-     trial_number, episode_callback, train_steps) = args
-    runid = str(random.getrandbits(runid_size))
-    agent.reset()
-    data = []
-    agent_ep = float(agent.ep)
-    for episode in range(n_episodes):
-        if episode % train_steps == 0:
-            agent.ep = 1
-        obs = env.reset()
-        totalrew = 0
-        agent.start_episode()
-        for step in range(max_steps):
-            act = agent.get_action(obs)
-            obs, rew, done, info = env.step(act)
-            agent.observe_reward(rew)
-            if not isinstance(rew, (float, int)):
-                rew = sum(rew)
-            totalrew += rew
-            if done:
-                break
-        agent.end_episode()
-        if episode % train_steps == 0:
-            data.append(episode_callback(runid, agent, env, episode,
-                                         totalrew, trial_number))
-            agent.ep = agent_ep
-    path = os.path.join(base_reporting_path, runid)
-    # Make sure to restore original ep
-    agent.ep = agent_ep
-
-    with open(path, 'w') as fl:
-        json.dump(data, fl)
-    return path
+    try:
+        (agent, env, n_episodes, max_steps,
+         trial_number, episode_callback, train_steps) = args
+        runid = str(random.getrandbits(runid_size))
+        path = os.path.join(base_reporting_path, runid)
+        data = []
+        agent.reset()
+        agent_ep = float(agent.ep)
+        for episode in range(n_episodes):
+            if episode % train_steps == 0:
+                agent.ep = 1
+            obs = env.reset()
+            totalrew = 0
+            agent.start_episode()
+            for step in range(max_steps):
+                act = agent.get_action(obs)
+                obs, rew, done, info = env.step(act)
+                agent.observe_reward(rew)
+                if not isinstance(rew, (float, int)):
+                    rew = sum(rew)
+                totalrew += rew
+                if done:
+                    break
+            agent.end_episode()
+            if episode % train_steps == 0:
+                data.append(episode_callback(runid, agent, env, episode,
+                                             totalrew, trial_number))
+                agent.ep = agent_ep
+        # Make sure to restore original ep
+        agent.ep = agent_ep
+        with open(path, 'w') as fl:
+            json.dump(data, fl)
+    except KeyboardInterrupt:
+        return None
+    else:
+        return path
 
 
 def benchmark(agent_list, env_list, n_episodes,
@@ -80,7 +83,8 @@ def benchmark(agent_list, env_list, n_episodes,
         with Pool() as pool:
             work = pool.imap_unordered(run_n_episodes, arguments)
             for datapath in tqdm(work, total=len(arguments)):
-                paths.append(datapath)
+                if datapath is not None:
+                    paths.append(datapath)
     except KeyboardInterrupt:
         print('Stopping Experiments...')
     else:
