@@ -129,7 +129,6 @@ def make_df(paths):
         for d in tqdm(work, total=len(filepaths), ncols=80, leave=False):
             data.extend(d)
     print('Painting...')
-    data = pd.DataFrame(data, columns=['runid', 'agent',
-                                       'world', 'ep',
-                                       'rew', 'trial'])
+    # We cannot add column names since we don't know what was recorded
+    data = pd.DataFrame(data)
     return data
